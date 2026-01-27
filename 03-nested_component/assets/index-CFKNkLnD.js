@@ -387,11 +387,11 @@ function Condition() {
       <button type="button" @click=${trigger}>trigger</button>
       ${data.bool ? createComponent(Child, {
     props: {
-      value: 1
+      value: "true 일 때 보여질 컴포넌트"
     }
   }) : createComponent(Child2, {
     props: {
-      value: 2
+      value: "false 일 때 다른 컴포넌트"
     }
   })}
     </div>
