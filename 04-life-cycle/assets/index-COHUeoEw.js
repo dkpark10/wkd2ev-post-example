@@ -370,23 +370,16 @@ function state(initial) {
   currentInstance2.states[stateIndex] = data;
   return data;
 }
-function updated(data, callback) {
+function mounted(callback) {
   const currentInstance2 = getCurrentInstance();
   if (currentInstance2 === null) {
-    throw new Error("updated 함수는 컴포넌트 내에서 선언해야 합니다.");
+    throw new Error("mount 함수는 컴포넌트 내에서 선언해야 합니다.");
   }
   checkInvalidHook(currentInstance2);
-  const dep = currentInstance2.updatedHooks;
-  const index = currentInstance2.updatedHookIndex++;
-  if (!dep[index]) {
-    dep[index] = {
-      data,
-      callback,
-      prevSnapshot: { ...data }
-    };
-  } else {
-    dep[index].callback = callback;
+  if (currentInstance2.isMounted) {
+    return;
   }
+  currentInstance2.mountHooks.push(callback);
 }
 function html(strings, ...values) {
   let idx = 0;
@@ -406,6 +399,9 @@ function createComponent(component, options) {
       instanceDeps.set(sequence, instance);
       instanceMap2.set(component, instanceDeps);
     }
+    if (options && options.props) {
+      instance.props = options.props;
+    }
     return instance;
   };
   func.__isCreateComponent = true;
@@ -415,7 +411,9 @@ function rootRender(container, component, options) {
   if (!component) {
     throw new Error("컴포넌트가 없습니다.");
   }
-  const getInstance = createComponent(component);
+  const getInstance = createComponent(component, {
+    props: options == null ? void 0 : options.props
+  });
   const instance = getInstance(0);
   instance.render(container);
   return instance;
@@ -449,19 +447,44 @@ function createDOM(vnode, parentElement) {
   });
   return el;
 }
-function Component() {
-  const data = state({
-    value: 1
+function Child({ value }) {
+  mounted(() => {
+    alert("mount child1");
+    return () => {
+      alert("unmount child1");
+    };
   });
-  updated(data, (prev) => {
-    console.log("123213", prev);
+  return html`<div id="child1">${value}</div>`;
+}
+function Child2({ value }) {
+  mounted(() => {
+    alert("mount child2");
+    return () => {
+      alert("unmount child2");
+    };
+  });
+  return html`<div id="child2">${value}</div>`;
+}
+function Condition() {
+  const data = state({
+    bool: true
   });
   const trigger = () => {
-    data.value += 1;
+    data.bool = !data.bool;
   };
   return html`
     <div id="app">
       <button type="button" @click=${trigger}>trigger</button>
-    </div>`;
+      ${data.bool ? createComponent(Child, {
+    props: {
+      value: "true 일 때 보여질 컴포넌트"
+    }
+  }) : createComponent(Child2, {
+    props: {
+      value: "false 일 때 다른 컴포넌트"
+    }
+  })}
+    </div>
+  `;
 }
-rootRender(document.getElementById("root"), Component);
+rootRender(document.getElementById("root"), Condition);
