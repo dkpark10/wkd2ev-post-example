@@ -447,20 +447,30 @@ function createDOM(vnode, parentElement) {
   });
   return el;
 }
+function appendDiv$1(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  document.body.appendChild(div);
+}
 function Child({ value }) {
   mounted(() => {
-    alert("mount child1");
+    appendDiv$1("mount child");
     return () => {
-      alert("unmount child1");
+      appendDiv$1("unmount child");
     };
   });
   return html`<div id="child1">${value}</div>`;
 }
+function appendDiv(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  document.body.appendChild(div);
+}
 function Child2({ value }) {
   mounted(() => {
-    alert("mount child2");
+    appendDiv("mount child2");
     return () => {
-      alert("unmount child2");
+      appendDiv("unmount child2");
     };
   });
   return html`<div id="child2">${value}</div>`;
