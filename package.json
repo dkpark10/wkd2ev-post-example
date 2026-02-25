@@ -1,18 +1,6 @@
 {
+  "name": "wkd2ev-blog-example",
   "author": "dkpark10 <dkpark10@naver.com>",
   "license": "ISC",
-  "packageManager": "pnpm@9.15.5",
-  "scripts": {
-    "build": "pnpm run --filter './track/*' build",
-    "test": "turbo run test",
-    "deploy": "pnpm run build && pnpm run test && gh-pages -d dist"
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^6.9.1",
-    "gh-pages": "^6.3.0",
-    "jsdom": "^24.0.0",
-    "turbo": "^2.7.5",
-    "vite": "^6.3.5",
-    "vitest": "^4.0.14"
-  }
+  "packageManager": "pnpm@9.15.5"
 }

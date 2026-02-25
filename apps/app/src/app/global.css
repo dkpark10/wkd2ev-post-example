@@ -1,0 +1,9 @@
+#reona-root {
+	font-size: 1rem;
+
+	button {
+		padding: 0.5rem 2rem;
+		border-radius: 0.5rem;
+		box-shadow: 0 0 0 1px #55545406,0 4px 4px #83767672;
+	}
+}
